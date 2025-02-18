@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: "Missing authorization code" });
       }
       
-      // Get environment variables.
+      // Read environment variables.
       const clientId = process.env.INSTAGRAM_CLIENT_ID;
       const clientSecret = process.env.INSTAGRAM_CLIENT_SECRET;
       const redirectUri = process.env.INSTAGRAM_REDIRECT_URI || "https://liadaltif-github-io-eight.vercel.app/api/auth/instagram";
@@ -35,13 +35,16 @@ export default async function handler(req, res) {
         body: params.toString()
       });
       
-      // Get the raw text response.
+      // Read the raw response text.
       const textData = await tokenResponse.text();
+      console.log("Raw token response:", textData);
+      
       let tokenData;
       try {
         tokenData = JSON.parse(textData);
       } catch (parseError) {
-        console.error("Failed to parse token response:", textData);
+        // If parsing fails, return an error with the raw response.
+        console.error("Failed to parse token response as JSON:", textData);
         return res.status(500).json({ error: "Failed to parse token response", raw: textData });
       }
       
@@ -56,8 +59,8 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "No access token in response", response: tokenData });
       }
       
-      // Now fetch the Instagram username using the access token.
-      const userResponse = await fetch('https://graph.instagram.com/me?fields=username&access_token=${accessToken}');
+      // Now, fetch the Instagram username using the access token.
+      const userResponse = await fetch(`https://graph.instagram.com/me?fields=username&access_token=${accessToken}`);
       const userData = await userResponse.json();
       
       if (!userResponse.ok) {
@@ -66,6 +69,7 @@ export default async function handler(req, res) {
       }
       
       const username = userData.username;
+      
       res.status(200).json({ username: username, access_token: accessToken });
       
     } catch (error) {
