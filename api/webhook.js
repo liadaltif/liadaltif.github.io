@@ -9,13 +9,20 @@ export default function handler(req, res) {
     req.on('end', () => {
       try {
         const parsedBody = JSON.parse(body);
-        console.log('Raw Webhook event received:', parsedBody); // Logs the entire payload
+        console.log('🔹 Raw Webhook event received:', JSON.stringify(parsedBody, null, 2)); // Full JSON Log
 
         if (parsedBody.entry) {
           parsedBody.entry.forEach(entry => {
+            console.log('🔹 Entry:', JSON.stringify(entry, null, 2));
+
             if (entry.changes) {
               entry.changes.forEach(change => {
-                console.log('Extracted Change:', change); // Logs the change object
+                console.log('🔹 Extracted Change:', JSON.stringify(change, null, 2)); // Logs the change object
+                
+                // If the change contains message data, log it separately
+                if (change.field === 'messages' && change.value) {
+                  console.log('✅ Message Data:', JSON.stringify(change.value, null, 2));
+                }
               });
             }
           });
@@ -23,7 +30,7 @@ export default function handler(req, res) {
 
         res.status(200).send('OK');
       } catch (error) {
-        console.error('Error parsing webhook:', error);
+        console.error('❌ Error parsing webhook:', error);
         res.status(400).send('Invalid JSON');
       }
     });
