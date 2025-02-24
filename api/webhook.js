@@ -13,19 +13,24 @@ export default function handler(req, res) {
 
         if (parsedBody.entry) {
           parsedBody.entry.forEach(entry => {
-            console.log('🔹 Entry:', JSON.stringify(entry, null, 2));
-
+            console.log('🔹 Entry ID:', entry.id, 'Time:', entry.time);
+            
             if (entry.changes) {
+              console.log('🔹 Full Changes Array:', JSON.stringify(entry.changes, null, 2)); // Force log changes array
+              
               entry.changes.forEach(change => {
                 console.log('🔹 Extracted Change:', JSON.stringify(change, null, 2)); // Logs the change object
                 
-                // If the change contains message data, log it separately
                 if (change.field === 'messages' && change.value) {
-                  console.log('✅ Message Data:', JSON.stringify(change.value, null, 2));
+                  console.log('✅ Message Data:', JSON.stringify(change.value, null, 2)); // Log actual message data
                 }
               });
+            } else {
+              console.log('⚠️ No changes found in entry.');
             }
           });
+        } else {
+          console.log('⚠️ No entries found in webhook payload.');
         }
 
         res.status(200).send('OK');
