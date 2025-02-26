@@ -1,6 +1,6 @@
 **Solmate Terms of Service**
 
-**Last Updated:** [Insert Date]
+**Last Updated:** [26/02/2025]
 
 Welcome to **Solmate**! These Terms of Service ("Terms") govern your use of our application, which integrates with Apple Music and TikTok to provide a unique music-based matching experience. By using Solmate, you agree to these Terms. If you do not agree, please do not use our services.
 
