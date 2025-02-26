@@ -12,5 +12,7 @@ app.get('/api/tiktok-callback', (req, res) => {
     res.redirect(`solmate://tiktok-callback?code=${authCode}`);
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+module.exports = app
