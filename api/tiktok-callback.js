@@ -1,16 +1,16 @@
-// pages/api/tiktok-callback.js
+const express = require('express');
+const app = express();
 
-export default function handler(req, res) {
-  // Extract query parameters (for example, TikTok might send ?authCode=...)
-  const { authCode, ...rest } = req.query;
+app.get('/api/tiktok-callback', (req, res) => {
+    const authCode = req.query.code; // Extract TikTok auth code
 
-  // Log the received parameters for debugging purposes
-  console.log("TikTok callback received:", req.query);
+    if (!authCode) {
+        return res.status(400).send("No auth code received from TikTok.");
+    }
 
-  // Respond with a JSON payload (or you could render a simple HTML page)
-  res.status(200).json({
-    message: "TikTok callback received successfully",
-    authCode: authCode || null,
-    otherParams: rest,
-  });
-}
+    // Redirect to Solmate app with auth code
+    res.redirect(`solmate://tiktok-callback?code=${authCode}`);
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
